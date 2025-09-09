@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - USE_SQLITE=true
+      - EMBEDDING_MODEL=cointegrated/rubert-tiny
+      - PYTHON_VERSION=3.11.1
+    volumes:
+      - .:/app
+      - app_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  app_data:

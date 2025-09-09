@@ -1,1 +1,5 @@
-# DocumentSearchApp
+# DocumentSearchApp 
+
+docker compose up -d 
+
+python app.py
