@@ -6,8 +6,8 @@ import os
 from typing import List, Optional
 
 from src.domain.entities import QueryRequest, DocumentType
-from src.application.use_cases import AddDocumentsUseCase, SearchDocumentsUseCase
-from src.infrastructure.sqlite_repository import SQLiteVectorRepository  # Изменено!
+from src.application.use_cases import AddDocumentsUseCase, SearchDocumentsUseCase 
+from src.infrastructure.milvus_repository import MilvusVectorRepository
 from src.infrastructure.file_processor import DefaultFileProcessor
 
 app = FastAPI(
@@ -25,8 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Dependency injection - используем SQLite вместо Milvus
-vector_repo = SQLiteVectorRepository()
+vector_repo = MilvusVectorRepository()
 file_processor = DefaultFileProcessor()
 
 add_documents_uc = AddDocumentsUseCase(vector_repo, file_processor)
@@ -34,10 +33,7 @@ search_documents_uc = SearchDocumentsUseCase(vector_repo)
 
 @app.post("/upload-documents/")
 async def upload_documents(files: List[UploadFile] = File(...)):
-    """
-    Загружает документы в систему.
-    Автоматически определяет тип и сохраняет в SQLite.
-    """
+
     file_infos = []
     try:
         for file in files:
